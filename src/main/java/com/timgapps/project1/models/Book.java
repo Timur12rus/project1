@@ -2,6 +2,9 @@ package com.timgapps.project1.models;
 
 public class Book {
 
+    // владелец книги
+    private Person owner;
+
     private int id;
     private String name;
 

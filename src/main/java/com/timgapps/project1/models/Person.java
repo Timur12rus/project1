@@ -1,6 +1,10 @@
 package com.timgapps.project1.models;
 
+import java.util.List;
+
 public class Person {
+
+    private List<Book> books;
     private int id;
 
     public int getId() {
