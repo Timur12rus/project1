@@ -1,11 +1,14 @@
 package com.timgapps.project1.controllers;
 
 import com.timgapps.project1.dao.PersonDAO;
+import com.timgapps.project1.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -40,5 +43,9 @@ public class PeopleController {
         }
         personDAO.save(person);
         return "redirect:/people";
+    }
+
+    public String newPerson(@ModelAttribute("person") Person person) {
+        return "people/new";
     }
 }
