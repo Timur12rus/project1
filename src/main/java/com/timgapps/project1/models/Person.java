@@ -26,6 +26,9 @@ public class Person {
         this.yearOfBirth = yearOfBirth;
     }
 
+    public Person() {
+    }
+
     public String getName() {
         return name;
     }

@@ -30,6 +30,7 @@ public class BookDAO {
     }
 
     public void save(Book book) {
+        book.setId(++BOOKS_COUNT);
         books.add(book);
     }
 }

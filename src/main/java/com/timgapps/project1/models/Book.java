@@ -48,4 +48,7 @@ public class Book {
         this.author = author;
         this.yearOfPublication = yearOfPublication;
     }
+
+    public Book() {
+    }
 }
