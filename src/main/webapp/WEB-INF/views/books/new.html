@@ -13,11 +13,13 @@
          th:errors="*{name}">Name error
     </div>
     <br/>
+    <br/>
     <label for="author">Enter author:</label>
     <input type="text" th:field="*{author}" id="author"/>
     <div style="color:red" th:if="${#fields.hasErrors('author')}"
          th:errors="*{author}">Author error
     </div>
+    <br/>
     <br/>
     <label for="yearOfPublication">Enter year of publication:</label>
     <input type="text" th:field="*{yearOfPublication}" id="yearOfPublication"/>

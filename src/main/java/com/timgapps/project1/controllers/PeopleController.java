@@ -28,6 +28,11 @@ public class PeopleController {
         return "people/index";
     }
 
+    @GetMapping("/new")
+    public String newPerson(@ModelAttribute("person") Person person) {
+        return "people/new";
+    }
+
     // получим одного человека из DAO и передадим этого человека на представление
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
@@ -45,8 +50,10 @@ public class PeopleController {
         return "redirect:/people";
     }
 
-    @GetMapping("/new")
-    public String newPerson(@ModelAttribute("person") Person person) {
-        return "people/new";
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id) {
+        model.addAttribute("person", personDAO.show(id));
+        return "people/edit";
     }
+
 }
