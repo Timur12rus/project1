@@ -16,6 +16,14 @@ public class Book {
 
     private String author;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setYearOfPublication(int yearOfPublication) {
+        this.yearOfPublication = yearOfPublication;
+    }
+
     @Min(value = 1800, message = "Year of birth should be greater than 0")
     private int yearOfPublication;
 

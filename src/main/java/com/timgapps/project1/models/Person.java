@@ -10,6 +10,10 @@ public class Person {
     private List<Book> books;
     private int id;
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -22,6 +26,7 @@ public class Person {
     private int yearOfBirth;
 
     public Person(int id, String name, int yearOfBirth) {
+        this.id = id;
         this.name = name;
         this.yearOfBirth = yearOfBirth;
     }

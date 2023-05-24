@@ -35,4 +35,15 @@ public class PersonDAO {
     public void save(Person person) {
         people.add(person);
     }
+
+    public void update(int id, Person person) {
+        Person personToBeUpdated = show(id);
+        personToBeUpdated.setId(person.getId());
+        personToBeUpdated.setName(person.getName());
+        personToBeUpdated.setYearOfBirth(person.getYearOfBirth());
+    }
+
+    public void delete(int id) {
+        people.removeIf(p -> p.getId() ==id);
+    }
 }

@@ -33,6 +33,19 @@ public class BooksController {
         return "books/show";
     }
 
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id) {
+        model.addAttribute("book", bookDAO.show(id));  // кладем в модель
+        return "books/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("book") @Valid Book book, // с помощью ModelAttribute принимаем объект "book"
+                         @PathVariable("id") int id) {
+        bookDAO.update(id, book);
+        return "redirect:/books";
+    }
+
     @GetMapping("/new")
     public String newBook(@ModelAttribute("book") Book book) {
         return "books/new";
@@ -47,4 +60,12 @@ public class BooksController {
         bookDAO.save(book);
         return "redirect:/books";
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id){
+        bookDAO.delete(id);
+        return "redirect:/books";
+    }
+
+
 }

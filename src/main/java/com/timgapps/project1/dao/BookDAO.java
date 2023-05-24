@@ -33,4 +33,17 @@ public class BookDAO {
         book.setId(++BOOKS_COUNT);
         books.add(book);
     }
+
+    public void update(int id, Book book) {
+        Book bookToBeUpdated = show(id);
+        bookToBeUpdated.setId(book.getId());
+        bookToBeUpdated.setAuthor(book.getAuthor());
+        bookToBeUpdated.setName(book.getName());
+        bookToBeUpdated.setYearOfPublication(book.getYearOfPublication());
+        System.out.println("bookToBeUpdated.getYearOfPublication() = " + bookToBeUpdated.getYearOfPublication());
+    }
+
+    public void delete(int id) {
+        books.removeIf(book -> book.getId() == id);
+    }
 }
