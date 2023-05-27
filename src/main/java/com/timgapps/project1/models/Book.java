@@ -6,15 +6,17 @@ import javax.validation.constraints.Size;
 
 public class Book {
 
-    // владелец книги
-    private Person owner;
-
     private int id;
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @NotEmpty(message = "Название книги не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
     private String name;
 
+    @NotEmpty(message = "Автор не должен быть пустым")
+    @Size(min = 2,max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
+
+    @Min(value = 1500, message = "Год должен быть больше, чем 1500")
+    private int yearOfPublication;
 
     public void setName(String name) {
         this.name = name;
@@ -23,9 +25,6 @@ public class Book {
     public void setYearOfPublication(int yearOfPublication) {
         this.yearOfPublication = yearOfPublication;
     }
-
-    @Min(value = 1800, message = "Year of birth should be greater than 0")
-    private int yearOfPublication;
 
     public String getName() {
         return name;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // содержит всю логику работы с базой данных для модели Person
 @Component
@@ -45,5 +46,9 @@ public class PersonDAO {
 
     public void delete(int id) {
         people.removeIf(p -> p.getId() ==id);
+    }
+
+    public Optional<Object> getPersonName(String name) {
+
     }
 }
