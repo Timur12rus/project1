@@ -9,25 +9,34 @@ public class Book {
     private int id;
     @NotEmpty(message = "Название книги не должно быть пустым")
     @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
-    private String name;
+    private String title;
 
     @NotEmpty(message = "Автор не должен быть пустым")
     @Size(min = 2,max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
 
     @Min(value = 1500, message = "Год должен быть больше, чем 1500")
-    private int yearOfPublication;
+    private int year;
 
-    public void setName(String name) {
-        this.name = name;
+    public Book(String title, String author, int year) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
     }
 
-    public void setYearOfPublication(int yearOfPublication) {
-        this.yearOfPublication = yearOfPublication;
+    public Book() {
     }
 
-    public String getName() {
-        return name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getAuthor() {
@@ -38,8 +47,8 @@ public class Book {
         this.author = author;
     }
 
-    public int getYearOfPublication() {
-        return yearOfPublication;
+    public int getYear() {
+        return year;
     }
     public int getId() {
         return id;
@@ -47,15 +56,5 @@ public class Book {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Book(int id, String name, String author, int yearOfPublication) {
-        this.id = id;
-        this.name = name;
-        this.author = author;
-        this.yearOfPublication = yearOfPublication;
-    }
-
-    public Book() {
     }
 }

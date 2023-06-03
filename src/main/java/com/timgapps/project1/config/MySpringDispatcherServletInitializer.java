@@ -25,6 +25,7 @@ public class MySpringDispatcherServletInitializer extends AbstractAnnotationConf
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
         registerHiddenFieldFilter(servletContext);
+        registerCharacterEncodingFilter(servletContext);
     }
 
     private void registerHiddenFieldFilter(ServletContext aContext) {
