@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BookDAO {
+public class    BookDAO {
     private static int BOOKS_COUNT;
     private List<Book> books;
 

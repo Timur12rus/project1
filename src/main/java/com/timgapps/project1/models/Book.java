@@ -12,11 +12,14 @@ public class Book {
     private String title;
 
     @NotEmpty(message = "Автор не должен быть пустым")
-    @Size(min = 2,max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
+    @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
 
     @Min(value = 1500, message = "Год должен быть больше, чем 1500")
     private int year;
+
+    public Book() {
+    }
 
     public Book(String title, String author, int year) {
         this.title = title;
@@ -24,8 +27,6 @@ public class Book {
         this.year = year;
     }
 
-    public Book() {
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -50,6 +51,7 @@ public class Book {
     public int getYear() {
         return year;
     }
+
     public int getId() {
         return id;
     }

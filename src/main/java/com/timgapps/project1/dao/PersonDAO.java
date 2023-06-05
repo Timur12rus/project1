@@ -1,151 +1,64 @@
 package com.timgapps.project1.dao;
 
+import com.timgapps.project1.models.Book;
 import com.timgapps.project1.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 
 // содержит всю логику работы с базой данных для модели Person
 @Component
 public class PersonDAO {
 
-    private final JdbcTemplate jdbcTemplate;  // для взамиодействия с БД
+    private final JdbcTemplate jdbcTemplate;  // для взаимодействия с БД (низкоуровневый)
 
-    private static Connection connection; // необходимо получить connection, чтобы с его помощью работать с данными из базы данных
-
-//    static {
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
+    @Autowired
     public PersonDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Autowired
-//    public PersonDAO(JdbcTemplate jdbcTemplate) {
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
-
-
     // возвращает список, который мы отобразим в браузере
     public List<Person> index() {
         return jdbcTemplate.query("SELECT * FROM Person", new BeanPropertyRowMapper<>(Person.class));
-        // RowMapper  - такой объект, который отображает строки из таблицы в наши сущности. Т.е. RowMapper каждую строку таблицы Person отобразит в объект Person()
-        // этот RowMapper мы должны реализовать сами (PersonMapper)
-
-//        List<Person> people = new ArrayList<>();
-//        try {
-//            Statement statement = connection.createStatement();
-//            String SQL = "SELECT * FROM Person";
-//            ResultSet resultSet = statement.executeQuery(SQL);
-//
-//            while (resultSet.next()) {
-//                Person person = new Person();
-//
-//                person.setId(resultSet.getInt("id"));
-//                person.setFullName(resultSet.getString("name"));
-//                person.setYearOfBirth(resultSet.getInt("yearofbirth"));
-//
-//                people.add(person);
-//            }
-//        } catch (
-//                SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return people;
+        // RowMapper - такой объект, который отображает строки из таблицы в наши сущности. Т.е. RowMapper каждую строку таблицы Person отобразит в объект Person()
     }
 
     public Person show(int id) {
         return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
-
-//        Person person = null;
-//        try {
-//            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Person WHERE id=?");
-//            preparedStatement.setInt(1, id);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//
-//            resultSet.next();
-//            person = new Person();
-//
-//            person.setId(resultSet.getInt("id"));
-//            person.setFullName(resultSet.getString("name"));
-//            person.setYearOfBirth(resultSet.getInt("yearofbirth"));
-//
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-////        return people.stream().filter(person -> person.getId() == id).findAny().orElse(null);
-//        return person;
     }
-
 
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO Person VALUES(1,?,?)", person.getFullName(), person.getYearOfBirth());
-//        try {
-//
-//            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Person VALUES(?,?)");
-//
-//            preparedStatement.setString(1, person.getFullName());
-//            preparedStatement.setInt(2, person.getYearOfBirth());
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        people.add(person);
+        jdbcTemplate.update("INSERT INTO Person(full_name, year_of_birth) VALUES(?,?)", person.getFullName(), person.getYearOfBirth());
     }
 
-    public void update(int id, Person person) {
-        jdbcTemplate.update("UPDATE Person SET fullName=?, yearofbirth=? WHERE id=?", person.getFullName(), person.getYearOfBirth(), id);
+    public void update(int id, Person updatedPerson) {
+        jdbcTemplate.update("UPDATE Person SET full_name=?, year_of_birth=? WHERE id=?", updatedPerson.getFullName(), updatedPerson.getYearOfBirth(), id);
 
-
-//        PreparedStatement preparedStatement = null;
-//        try {
-//            preparedStatement = connection.prepareStatement("UPDATE Person SET name=?, yearofbirth=? WHERE id=?");
-//            preparedStatement.setString(1, person.getFullName());
-//            preparedStatement.setInt(2, person.getYearOfBirth());
-//            preparedStatement.setInt(3, id);
-//
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-//        Person personToBeUpdated = show(id);
-//        personToBeUpdated.setId(person.getId());
-//        personToBeUpdated.setName(person.getName());
-//        personToBeUpdated.setYearOfBirth(person.getYearOfBirth());
     }
 
     public void delete(int id) {
-//        people.removeIf(p -> p.getId() ==id);
         jdbcTemplate.update("DELETE FROM Person WHERE id=?", id);
-
-//        try {
-//            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Peroson WHERE id=?");
-//            preparedStatement.setInt(1, id);
-//            preparedStatement.executeUpdate();
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
-    public Object getBooksByPersonId(int id) {
-        return null;
+    // Для валидации уникальности ФИО
+    public Optional<Person> getPersonByFullName(String fullName) {
+        return jdbcTemplate.query("SELECT * FROM Person WHERE full_name=?", new Object[]{fullName},
+                new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
+
+    // Здесь Join не нужен. И так уже получили человека с помощью отдельного метода
+    // метод нужен чтобы получить список книг, которые взял этот человек
+    public List<Book> getBooksByPersonId(int id) {
+        // здесь id - это id того человека, на странице которого мы находимся
+        return jdbcTemplate.query("SELECT * FROM Book WHERE person_id = ?", new Object[]{id},
+                new BeanPropertyRowMapper<>(Book.class));
+    }
+
+
 }

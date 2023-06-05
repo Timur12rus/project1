@@ -3,6 +3,7 @@ package com.timgapps.project1.controllers;
 import com.timgapps.project1.dao.PersonDAO;
 import com.timgapps.project1.models.Person;
 //import com.timgapps.project1.util.PersonValidator;
+import com.timgapps.project1.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +17,15 @@ import javax.validation.Valid;
 public class PeopleController {
 
     private final PersonDAO personDAO;
-//    private final PersonValidator personValidator;
+    private final PersonValidator personValidator;
 
 
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
 //    public PeopleController(PersonValidator personValidator, PersonDAO personDAO) {
 //        this.personValidator = personValidator;
         this.personDAO = personDAO;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
@@ -37,6 +39,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", personDAO.show(id));
+        // помимо человека, передаем в модель книги этого человека, т.к. должны в представлении отображать список его книг
         model.addAttribute("books", personDAO.getBooksByPersonId(id));
 
         return "people/show";
@@ -66,7 +69,7 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult,
-                         @PathVariable("id") int id) { // с помощью ModelAttribute принимаем объект "person"
+                         @PathVariable("id") int id) { // с помощью @ModelAttribute принимаем объект "person"
         if (bindingResult.hasErrors()) {
             return "people/edit";
         }
