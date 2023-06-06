@@ -53,7 +53,7 @@ public class PersonDAO {
     }
 
     // Здесь Join не нужен. И так уже получили человека с помощью отдельного метода
-    // метод нужен чтобы получить список книг, которые взял этот человек
+    // Метод нужен, чтобы получить список книг, которые взял этот человек
     public List<Book> getBooksByPersonId(int id) {
         // здесь id - это id того человека, на странице которого мы находимся
         return jdbcTemplate.query("SELECT * FROM Book WHERE person_id = ?", new Object[]{id},

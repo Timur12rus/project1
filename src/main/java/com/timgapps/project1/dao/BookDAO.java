@@ -1,24 +1,32 @@
 package com.timgapps.project1.dao;
 
 import com.timgapps.project1.models.Book;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class    BookDAO {
-    private static int BOOKS_COUNT;
-    private List<Book> books;
+public class BookDAO {
+    private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    public BookDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     // возвращает список, который мы отобразим в браузере
     public List<Book> index() {
-        return books;
+        return jdbcTemplate.query("SELECT * FROM Book", new BeanPropertyRowMapper<>(Book.class));
     }
 
     public Book show(int id) {
-        return books.stream().filter(book -> book.getId() == id).findAny().orElse(null);
+        return jdbcTemplate.query("SELECT * FROM Book WHERE id=", Object[]{
+            id, new BeanPropertyRowMapper<>()
+        })
     }
 
     public void save(Book book) {
