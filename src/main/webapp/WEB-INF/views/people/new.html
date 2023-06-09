@@ -7,8 +7,8 @@
 <body>
 
 <form th:method="POST" th:action="@{/people}" th:object="${person}">
-    <label for="name">Enter name:</label>
-    <input type="text" th:field="*{fullName}" id="name"/>
+    <label for="fullName">Enter name:</label>
+    <input type="text" th:field="*{fullName}" id="fullName"/>
     <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name error</div>
     <br/>
     <br/>

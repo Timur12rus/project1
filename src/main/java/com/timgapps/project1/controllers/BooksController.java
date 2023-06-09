@@ -42,7 +42,8 @@ public class BooksController {
         if (bookOwner.isPresent()) {
             model.addAttribute("owner", bookOwner.get());  // если есть владелец, в модель кладем владельца книги
         } else {
-            model.addAttribute("people", personDAO.index()); // если нет владельца у книги, значит книга свободна, значит в этой странице нужно показать выпадаюий список
+            model.addAttribute("people", personDAO.index()); // если нет владельца у книги, значит книга свободна, значит в этой странице нужно
+            // показать выпадающий список
             // т.е. в модель будет положен весь список людей
         }
         return "books/show";

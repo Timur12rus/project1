@@ -7,10 +7,10 @@
 <body>
 
 <form th:method="POST" th:action="@{/books}" th:object="${book}">
-    <label for="name">Enter book name:</label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color:red" th:if="${#fields.hasErrors('name')}"
-         th:errors="*{name}">Name error
+    <label for="title">Enter book name:</label>
+    <input type="text" th:field="*{title}" id="title"/>
+    <div style="color:red" th:if="${#fields.hasErrors('title')}"
+         th:errors="*{title}">Name error
     </div>
     <br/>
     <br/>
@@ -21,10 +21,10 @@
     </div>
     <br/>
     <br/>
-    <label for="yearOfPublication">Enter year of publication:</label>
-    <input type="text" th:field="*{yearOfPublication}" id="yearOfPublication"/>
-    <div style="color:red" th:if="${#fields.hasErrors('yearOfPublication')}"
-         th:errors="*{yearOfPublication}">Year of publication error
+    <label for="year">Enter year of publication:</label>
+    <input type="text" th:field="*{year}" id="year"/>
+    <div style="color:red" th:if="${#fields.hasErrors('year')}"
+         th:errors="*{year}">Year of publication error
     </div>
     <br/>
     <br/>
