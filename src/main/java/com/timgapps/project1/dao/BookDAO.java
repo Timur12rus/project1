@@ -55,7 +55,7 @@ public class BookDAO {
                 "WHERE Book.id = ?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
-    // освобождает книгу человеку(этот метод вызывается, когда человек возвращает книгу в библиотекуz)
+    // освобождает книгу человеку(этот метод вызывается, когда человек возвращает книгу в библиотеку)
     public void release(int id) {
         jdbcTemplate.update("UPDATE Book SET person_id=NULL WHERE id=?", id);
     }
