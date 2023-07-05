@@ -2,6 +2,7 @@ package com.timgapps.project1.util;
 
 import com.timgapps.project1.dao.PersonDAO;
 import com.timgapps.project1.models.Person;
+import com.timgapps.project1.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -11,11 +12,11 @@ import org.springframework.validation.Validator;
 @Component
 public class PersonValidator implements Validator {
 
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
 
     @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonValidator(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class PersonValidator implements Validator {
         Person person = (Person) o;
 
         // валидатор проверяет, что ФИО униакльное
-        if (personDAO.getPersonByFullName(person.getFullName()).isPresent())
-            errors.rejectValue("fullName", "", "Человек с таким именем уже существует!");
+        if (peopleService.getPersonByFullName(person.getFullName()).isPresent())
+            errors.rejectValue("fullName", "", "Человек с таким ФИО уже существует!");
     }
 }

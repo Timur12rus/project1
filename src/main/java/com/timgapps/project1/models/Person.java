@@ -1,10 +1,16 @@
 package com.timgapps.project1.models;
 
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
+@Entity
+@Table(name = "person")
 public class Person {
     private int id;
 
@@ -14,6 +20,17 @@ public class Person {
 
     @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
     private int yearOfBirth;
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
 
     // конструктор по умолчанию нужен для Spring
     public Person() {

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -18,18 +19,55 @@ public class Book {
 
     @NotEmpty(message = "Название книги не должно быть пустым")
     @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
     @NotEmpty(message = "Автор не должен быть пустым")
     @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     @ManyToOne
-    @Column(name="author")
+    @Column(name = "author")
     private String author;
 
     @Min(value = 1500, message = "Год должен быть больше, чем 1500")
-    @Column(name="year")
+    @Column(name = "year")
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    // в это поле сохранаяется текущее время, когда какой-то человек забирает книгу
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
+    // определяет просрочена сдача книги или нет
+    @Transient
+    private boolean expired; // Hibernate не будет замечать этого поля, что-нам и нужно. По умолчанию = false
 
     public Book() {
     }
