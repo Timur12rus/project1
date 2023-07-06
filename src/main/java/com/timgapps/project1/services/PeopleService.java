@@ -1,14 +1,15 @@
 package com.timgapps.project1.services;
 
 
+import com.timgapps.project1.models.Book;
 import com.timgapps.project1.models.Person;
 import com.timgapps.project1.repositories.PeopleRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -46,7 +47,30 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
-    public Optional<Object> getPersonByFullName(String fullName) {
-        peopleRepository.findByFullName(fullName);
+    public Optional<Person> getPersonByFullName(String fullName) {
+        return peopleRepository.findByFullName(fullName);
+    }
+
+    public List<Book> getBooksByPersonId(int id) {
+        Optional<Person> person = peopleRepository.findById(id);
+
+        if (person.isPresent()) {
+            Hibernate.initialize(person.get().getBooks());
+            // Мы внизу итерируемся по книгам, поэтому они точно будут загружены, но на всякий случай
+            // не мешает всегда вызывать Hibernate.initialize()
+            // (на случай, например, если код в дальнейшем поменяется и итерация по книгам удалится)
+
+            // проверка просроченности книг
+            person.get().getBooks().forEach(book -> {
+                long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
+                // 864000000 миллисекунда = 10 суток
+                if (diffInMillies > 864000000) {
+                    book.setExpired(true);  // книга просрочена
+                }
+            });
+            return person.get().getBooks();
+        } else {
+            return Collections.emptyList();
+        }
     }
 }
