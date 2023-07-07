@@ -1,9 +1,8 @@
 package com.timgapps.project1.controllers;
 
-import com.timgapps.project1.dao.PersonDAO;
 import com.timgapps.project1.models.Person;
 //import com.timgapps.project1.util.PersonValidator;
-import com.timgapps.project1.services.BookService;
+import com.timgapps.project1.services.BooksService;
 import com.timgapps.project1.services.PeopleService;
 import com.timgapps.project1.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,14 @@ public class PeopleController {
 
     private final PeopleService peopleService;
 
-    private final BookService bookService;
+    private final BooksService booksService;
     private final PersonValidator personValidator;
 
 
     @Autowired
-    public PeopleController(PeopleService peopleService, BookService bookService, PersonValidator personValidator) {
+    public PeopleController(PeopleService peopleService, BooksService booksService, PersonValidator personValidator) {
         this.peopleService = peopleService;
-        this.bookService = bookService;
+        this.booksService = booksService;
 //    public PeopleController(PersonValidator personValidator, PersonDAO personDAO) {
 //        this.personValidator = personValidator;
 

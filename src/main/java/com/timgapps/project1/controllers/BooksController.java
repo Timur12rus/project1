@@ -4,6 +4,8 @@ import com.timgapps.project1.dao.BookDAO;
 import com.timgapps.project1.dao.PersonDAO;
 import com.timgapps.project1.models.Book;
 import com.timgapps.project1.models.Person;
+import com.timgapps.project1.services.BooksService;
+import com.timgapps.project1.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,19 +18,27 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private BookDAO bookDAO;
-    private PersonDAO personDAO;
+    private BooksService booksService;
+    private PeopleService peopleService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, PersonDAO personDAO) {
-        this.bookDAO = bookDAO;
-        this.personDAO = personDAO; // необходим будет список всех людей, поэтому используем здесь еще и personDAO
+    public BooksController(BooksService booksService, PeopleService peopleService) {
+        this.booksService = booksService;
+        this.peopleService = peopleService;
     }
 
     @GetMapping()
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
+                        @RequestParam(value = "sort_by_year", required = false) boolean sortByYear) {
+
+        if (page == null || booksPerPage == null) {
+            model.addAttribute("books", booksService.findAll(sortByYear));  // выдача всех книг
+        } else {
+            model.addAttribute("books", booksService.findWithPagination(page, booksPerPage, sortByYear));
+        }
         // получим все книги из DAO и передадим на отображение в представление(положим в модель)
-        model.addAttribute("books", bookDAO.index());
+//        model.addAttribute("books", bookDAO.index());
         return "books/index";
     }
 
