@@ -46,13 +46,15 @@ public class BooksController {
     // если же книга свободна, мы должны показывать выпадающий список из людей, чтобы с помощью select'а мы могли назначить эту книгу человеку
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
-        model.addAttribute("book", bookDAO.show(id));
-        Optional<Person> bookOwner = bookDAO.getBookOwner(id);  // получить владельца книги, Optional<>, т.е. может здесь лежать владелец или нет
+        model.addAttribute("book", booksService.findOne(id));
 
-        if (bookOwner.isPresent()) {
-            model.addAttribute("owner", bookOwner.get());  // если есть владелец, в модель кладем владельца книги
+        Person bookOwner = booksService.getBookOwner(id);
+
+
+        if (bookOwner != null) {
+            model.addAttribute("owner", bookOwner);  // если есть владелец, в модель кладем владельца книги
         } else {
-            model.addAttribute("people", personDAO.index()); // если нет владельца у книги, значит книга свободна, значит в этой странице нужно
+            model.addAttribute("people", peopleService.findAll()); // если нет владельца у книги, значит книга свободна, значит в этой странице нужно
             // показать выпадающий список
             // т.е. в модель будет положен весь список людей
         }
@@ -64,19 +66,30 @@ public class BooksController {
         return "books/new";
     }
 
+    @GetMapping("/search")
+    public String searchPage() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String makeSearch(Model model, @RequestParam("query") String query) {
+        model.addAttribute("books", booksService.searchByTitle(query));
+        return "books/search";
+    }
+
     @PostMapping()
     public String create(@ModelAttribute("book") @Valid Book book
             , BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "books/new";
         }
-        bookDAO.save(book);
+        booksService.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("book", bookDAO.show(id));  // кладем в модель
+        model.addAttribute("book", booksService.findOne(id));  // кладем в модель
         return "books/edit";
     }
 
@@ -87,13 +100,13 @@ public class BooksController {
         if (bindingResult.hasErrors())
             return "books/edit";
 
-        bookDAO.update(id, book);
+        booksService.update(id, book);
         return "redirect:/books";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        bookDAO.delete(id);
+        booksService.delete(id);
         return "redirect:/books";
     }
 
@@ -102,7 +115,7 @@ public class BooksController {
     // у книги в БД в колонке во внешнем ключе будет назначено null
     @PatchMapping("/{id}/release")
     public String release(@PathVariable("id") int id) {
-        bookDAO.release(id);
+        booksService.release(id);
         return "redirect:/books/" + id;  // здесь простой redirect обратно на страницу книги с id
     }
 
@@ -114,7 +127,8 @@ public class BooksController {
     public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person selectedPerson) {
         // через @ModelAttribute получаем "человека" из выпадающего списка из представления
         // у selectedPerson назначено только поле id, остальное поля - null
-        bookDAO.assign(id, selectedPerson);
+        booksService.assign(id, selectedPerson);
         return "redirect:/books/" + id; // здесь простой redirect обратно на страницу книги с id
     }
+
 }
